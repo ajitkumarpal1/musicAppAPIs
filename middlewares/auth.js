@@ -12,14 +12,14 @@ export const auth = async (req, res, next) => {
       token = req.headers.authorization; // Fallback to use the entire authorization header
     }
   }
-
+  console.log(token)
   if (!token) {
     return res.status(401).json({ success: false, message: 'No token provided. Please sign in.' });
   }
 
   try {
     // Verify the token
-    const decodedData = jwt.verify(token, process.env.JWT_SECRET);
+    const decodedData = jwt.verify(token, process.env.JWT_TOKEN);
     
     // Fetch user data
     const userData = await UserModel.findById(decodedData.id).lean(); // Convert to plain JavaScript object

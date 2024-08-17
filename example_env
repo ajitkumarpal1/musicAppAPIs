@@ -1,5 +1,5 @@
 MONGODB_URI=mongodb://127.0.0.1:27017/MusicApp 
-JWT_Secret=Alert1234
+JWT_TOKEN=Alert1234
 port=3200# 8000  
 COOKIE_EXPIRES_IN=1
 JWT_Expire=1d
