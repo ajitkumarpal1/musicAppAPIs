@@ -31,7 +31,7 @@ export const auth = async (req, res, next) => {
 
     next();
   } catch (error) {
-    return res.status(401).json({ success: false, message: "Invalid token. Please sign in again." });
+    return res.status(401).json({ success: false, message: "Invalid token. Please sign in again.",error:error });
   }
 };
 
