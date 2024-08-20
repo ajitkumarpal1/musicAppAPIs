@@ -28,7 +28,7 @@ export const songService = {
       }
   
       // Convert playlistId to ObjectId
-      const objectIdPlaylistId = new mongoose.Types.ObjectId(playlistId);
+      const objectIdPlaylistId = new mongoose.isValidObjectId(playlistId);
   
       // Find the playlist to check if the song is already in the playlist
       const playlist = await PlayList.findById(objectIdPlaylistId);
