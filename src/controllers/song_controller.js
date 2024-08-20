@@ -5,13 +5,13 @@ import mongoose from "mongoose";
 import songScima from "../models/allSongs.js";
 
 
-export const songService = { 
-  getSongById:async (req, res, next)=>{
+export const songService = {
+  getSongById: async (req, res, next) => {
     try {
       const songId = req.params.songId;
-      const song = await songScima.findOne({id:songId})
-      if(!song) {
-        return res.status(404).json({ success:false ,message: "Song not found" });
+      const song = await songScima.findOne({ id: songId })
+      if (!song) {
+        return res.status(404).json({ success: false, message: "Song not found" });
       }
       res.status(200).json(song)
     } catch (error) {
@@ -21,39 +21,41 @@ export const songService = {
   pushSongInPlaylist: async (req, res, next) => {
     try {
       const { playlistId, songId } = req.body;
-  
+
       // Ensure playlistId and songId are provided
       if (!playlistId || !songId) {
         return res.status(400).json({ message: 'Playlist ID and Song ID are required' });
       }
-  
-      // Convert playlistId to ObjectId
-      const objectIdPlaylistId = new mongoose.isValidObjectId(playlistId);
-  
+
+      // Validate playlistId
+      if (!mongoose.isValidObjectId(playlistId)) {
+        return res.status(400).json({ message: 'Invalid Playlist ID' });
+      }
+
       // Find the playlist to check if the song is already in the playlist
-      const playlist = await PlayList.findById(objectIdPlaylistId);
-  
+      const playlist = await PlayList.findById(playlistId);
+
       if (!playlist) {
         return res.status(404).json({ message: 'Playlist not found' });
       }
-  
+
       // Check if the song is already in the playlist
       if (playlist.songList.includes(songId)) {
         return res.status(400).json({ message: 'Song is already in the playlist' });
       }
-  
+
       // Update the playlist by pushing the song ID into the songList array
       playlist.songList.push(songId);
       let updatedPlaylist = await playlist.save()
       /* updatedPlaylist.lean();
       updatedPlaylist.id = songId */
-  
+
       // Respond with the updated playlist
       res.status(200).json(updatedPlaylist);
     } catch (error) {
       next(error); // Pass the error to the error handling middleware
     }
-  },  
+  },
   // Function to create a new playlist
   createPlayList: async (req, res, next) => {
     try {
@@ -105,7 +107,7 @@ export const songService = {
       let songs = response.data.tracks.data; */
       // Fetch all songs without populate since 'artist' is an embedded object
       const allSongs = await songScima.find({}).lean();
-      
+
       // Log the first song to check the data structure
       console.log(allSongs[0]);
 
